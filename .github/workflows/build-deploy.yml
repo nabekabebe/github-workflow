@@ -4,10 +4,14 @@ on:
   push:
     branches:
       - main
+      - test
+      - staging
 
   pull_request:
     branches:
       - main
+      - test
+      - staging
 
 jobs:
   run-test:
@@ -33,8 +37,52 @@ jobs:
       - name: Run tests and lint
         run: echo "Running tests and lint"
 
-  deploy:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+  deploy-test:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/test'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      #   - name: Setup Node.js
+      #     uses: actions/setup-node@v3
+      #     with:
+      #       node-version: "23"
+      #       cache: "npm"
+
+      #   - name: Install dependencies
+      #     run: npm install
+
+      #   - name: Run tests
+      #     run: npm test
+
+      - name: Deploy to test server
+        run: echo "Deploying to test server"
+
+  deploy-stage:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/staging'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      #   - name: Setup Node.js
+      #     uses: actions/setup-node@v3
+      #     with:
+      #       node-version: "23"
+      #       cache: "npm"
+
+      #   - name: Install dependencies
+      #     run: npm install
+
+      #   - name: Run tests
+      #     run: npm test
+
+      - name: Deploy to staging
+        run: echo "Deploying to staging"
+
+  deploy-prod:
+    if: github.event_name == 'push' && github.ref == 'refs/tags/*'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

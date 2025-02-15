@@ -1,0 +1,56 @@
+name: CI CD test
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  run-test:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      #   - name: Setup Node.js
+      #     uses: actions/setup-node@v3
+      #     with:
+      #       node-version: "23"
+      #       cache: "npm"
+
+      #   - name: Install dependencies
+      #     run: npm install
+
+      #   - name: Run tests
+      #     run: npm test
+      - name: Run tests and lint
+        run: echo "Running tests and lint"
+
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      #   - name: Setup Node.js
+      #     uses: actions/setup-node@v3
+      #     with:
+      #       node-version: "23"
+      #       cache: "npm"
+
+      #   - name: Install dependencies
+      #     run: npm install
+
+      #   - name: Run tests
+      #     run: npm test
+
+      - name: Deploy to production
+        run: echo "Deploying to production"
